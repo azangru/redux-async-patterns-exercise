@@ -26,6 +26,14 @@ export default {
             }
         },
         {
+            path: 'login',
+            getComponent(location, cb) {
+                System.import('./modules/login/Login.jsx')
+                    .then(loadRoute(cb))
+                    .catch(errorLoading);
+            }
+        },
+        {
             path: 'hashtag-autocompletion-with-draftjs',
             getComponent(location, cb) {
                 System.import('./modules/hashtag-autocompletion-demo/DemoPage.jsx')
