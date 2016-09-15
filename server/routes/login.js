@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 let router = express.Router();
 
 router.post('/', (req, res) => {
-    console.log('body', req.body);
     if (!req.body.username || !req.body.password) {
         return res.status(400).json({error: 'Invalid data parameters.'});
     }

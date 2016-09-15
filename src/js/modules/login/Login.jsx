@@ -1,4 +1,19 @@
 import React, {Component} from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as Actions from '~/state/action_creators';
+
+function mapStateToProps(state) {
+    return {
+        user: state.userReducer
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        greetingActions: bindActionCreators(Actions, dispatch),
+    };
+}
 
 export class Login extends Component {
 

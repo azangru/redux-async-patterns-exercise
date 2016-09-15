@@ -1,10 +1,14 @@
 import * as types from '../constants/ActionTypes';
 
-export default function greetingReducer (state={}, action) {
+const initialUser = {
+    authenticated: false
+};
+
+export default function userReducer (state=initialUser, action) {
 
     switch (action.type) {
-        case types.GREET:
-            return Object.assign ({}, state, {message: action.payload.message });
+        case types.AUTHENTICATION_SUCCESS:
+            return Object.assign ({}, state, {user: action.payload });
         default:
             return state;
     }
