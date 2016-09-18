@@ -26,6 +26,14 @@ export default {
             }
         },
         {
+            path: 'showcase',
+            getComponent(location, cb) {
+                System.import('./modules/showcase/Showcase.jsx')
+                    .then(loadRoute(cb))
+                    .catch(errorLoading);
+            }
+        },
+        {
             path: 'login',
             getComponent(location, cb) {
                 System.import('./modules/login/Login.jsx')

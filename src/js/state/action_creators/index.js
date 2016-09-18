@@ -13,3 +13,9 @@ export function login(payload) {
         payload
     };
 }
+
+export function getTitles() {
+    return {
+        type: types.GET_SHOWCASE_TITLES
+    };
+}
