@@ -6,3 +6,10 @@ export function sayHello() {
         payload: {message: "Hello world!"}
     };
 }
+
+export function login(payload) {
+    return {
+        type: types.LOGIN,
+        payload
+    };
+}

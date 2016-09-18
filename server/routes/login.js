@@ -9,11 +9,14 @@ router.post('/', (req, res) => {
     }
     let token = jwt.sign({
         id: 123,
-        firstName: 'John',
-        lastName: 'Smith',
+        username: req.body.username,
         role: 'test'
     }, 'very-secret-key');
-    return res.status(200).json({token: token});
+    return res.status(200).json({
+        token: token,
+        username: req.body.username,
+        password: req.body.password
+    });
 });
 
 export default router;

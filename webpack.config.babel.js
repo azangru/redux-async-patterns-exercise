@@ -14,7 +14,7 @@ module.exports = (env) => {
         debug: false,
         context: resolve('src/js'),
         entry: {
-            javascript: './index.js',
+            javascript: ['babel-polyfill', './index.js'],
             vendor: ['react', 'react-dom', 'react-router', 'redux', 'react-redux']
         },
         output: {

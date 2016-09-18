@@ -11,7 +11,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        greetingActions: bindActionCreators(Actions, dispatch),
+        loginActions: bindActionCreators(Actions, dispatch),
     };
 }
 
@@ -19,6 +19,36 @@ export class Login extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            username: '',
+            password: ''
+        };
+        this.bindFunctions();
+    }
+
+    bindFunctions() {
+        this.changeUsername = this.changeUsername.bind(this);
+        this.changePassword = this.changePassword.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    changeUsername(e) {
+        this.setState({
+            username: e.target.value
+        });
+    }
+
+    changePassword(e) {
+        this.setState({
+            password: e.target.value
+        });
+    }
+
+    handleClick() {
+        this.props.loginActions.login({
+            username: this.state.username,
+            password: this.state.password
+        });
     }
 
     render() {
@@ -28,20 +58,28 @@ export class Login extends Component {
                 <label>
                     <input
                       type="text"
+                      value={this.state.username}
+                      onChange={this.changeUsername}
                     />
                     username
                 </label>
                 <label>
                     <input
                       type="password"
+                      value={this.state.password}
+                      onChange={this.changePassword}
                     />
                     password
                 </label>
-                <button>Log in</button>
+                <button
+                    onClick={this.handleClick}
+                >Log in</button>
             </div>
         );
     }
 }
 
-
-export default Login;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);

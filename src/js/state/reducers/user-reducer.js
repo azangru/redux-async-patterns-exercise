@@ -7,7 +7,7 @@ const initialUser = {
 export default function userReducer (state=initialUser, action) {
 
     switch (action.type) {
-        case types.AUTHENTICATION_SUCCESS:
+        case types.LOGIN_SUCCESS:
             return Object.assign ({}, state, {user: action.payload });
         default:
             return state;
