@@ -1,10 +1,15 @@
-import React from 'react';
-import { Route } from 'react-router';
-import App from './app';
+import Layout from './layout';
 
-export default (
-    <Route path='/' component={App}/>
-);
+// the solution for imitating System.js on the server is taken from this
+// StackOverflow question: http://stackoverflow.com/questions/37121442/server-side-react-with-webpack-2-system-import
+if (typeof System === 'undefined') {
+    // we are on the server side
+    var System = {
+        import(path) {
+            return Promise.resolve(require(path));
+        }
+    };
+}
 
 function errorLoading(err) {
     console.error('Could not load the route', err);
@@ -15,16 +20,16 @@ function loadRoute(cb) {
 }
 
 export default {
-    component: App,
+    component: Layout,
+    path: '/',
+    indexRoute: {
+        getComponent(location, cb) {
+            System.import('./modules/main/Main.jsx')
+                .then(loadRoute(cb))
+                .catch(errorLoading);
+        }
+    },
     childRoutes: [
-        {
-            path: '/',
-            getComponent(location, cb) {
-                System.import('./modules/main/Main.jsx')
-                    .then(loadRoute(cb))
-                    .catch(errorLoading);
-            }
-        },
         {
             path: 'showcase',
             getComponent(location, cb) {
