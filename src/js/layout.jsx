@@ -16,7 +16,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export class App extends Component {
+export class Layout extends Component {
 
     constructor(props) {
         super(props);
@@ -40,4 +40,4 @@ export class App extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(Layout);

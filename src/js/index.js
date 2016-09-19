@@ -6,7 +6,7 @@ import { match, browserHistory } from 'react-router';
 import App from './app';
 import routes from '~/routes';
 
-match({history: browserHistory, routes: routes}, (error, redirectLocation, renderProps) => {
+match({history: browserHistory, routes}, (error, redirectLocation, renderProps) => {
     if (error) {
         return console.error('BrowserEntry match error', error);
     }

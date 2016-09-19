@@ -11,12 +11,12 @@ import { Provider } from 'react-redux';
 import ClientApp from '../src/js/app';
 import clientRoutes from '../src/js/routes';
 import configureStore from '../src/js/state/store';
+import waitAll from '../src/js/state/sagas/waitAll';
 
 
 import router from './routes';
 
 let app = express();
-let store = configureStore();
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -35,24 +35,38 @@ app.use(function(req, res, next) {
 app.use('/api', router);
 
 app.get('*', (req, res) => {
+    let store = configureStore(); // creating a new store every new request
+    store.dispatch({
+        type: 'GREET',
+        payload: {message: "Hello world!"}
+    });
+
     match({ routes: clientRoutes, location: req.url }, (error, redirectLocation, renderProps) => {
         if (error) {
           res.status(500).send(error.message);
         } else if (redirectLocation) {
             console.log('redirect location');
         } else if (renderProps) {
-            console.log('components', renderProps.components);
-          const app = ReactDOMServer.renderToString(
-            React.createElement(Provider, {store},
-              React.createElement(RouterContext, renderProps)
-            )
-          )
-          res.render('index.ejs', {app});
-        //   res.status(200).send(template({body}))
+            const preloaders = renderProps.components
+                .filter((component) => component && component.preload)
+                .map((component) => component.preload)
+                .reduce((result, preloaders) => result.concat(preloaders), []);
+
+
+            store.runSaga(waitAll(preloaders)).done.then(() => {
+                console.log('store', store.getState());
+                const app = ReactDOMServer.renderToString(
+                    React.createElement(Provider, {store},
+                        React.createElement(RouterContext, renderProps)
+                    )
+                );
+                res.render('index.ejs', {app, store: store.getState()});
+
+            });
         } else {
-          res.status(404).send('not found lol')
+          res.status(404).send('not found lol');
         }
-    })
+    });
 
 });
 
