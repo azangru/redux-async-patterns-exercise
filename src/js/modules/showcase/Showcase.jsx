@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '~/state/action_creators';
+import {fetchShowcase as fetchShowcaseSaga} from '~/state/sagas';
 
 function mapStateToProps(state) {
     return {
@@ -39,6 +40,8 @@ export class Showcase extends Component {
         );
     }
 }
+
+Showcase.preload = [fetchShowcaseSaga];
 
 export default connect(
   mapStateToProps,

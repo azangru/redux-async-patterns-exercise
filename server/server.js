@@ -10,12 +10,13 @@ import { match, RouterContext } from 'react-router';
 import { Provider } from 'react-redux';
 import ClientApp from '../src/js/app';
 import clientRoutes from '../src/js/routes';
-import store from '../src/js/state/store';
+import configureStore from '../src/js/state/store';
 
 
 import router from './routes';
 
 let app = express();
+let store = configureStore();
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -40,6 +41,7 @@ app.get('*', (req, res) => {
         } else if (redirectLocation) {
             console.log('redirect location');
         } else if (renderProps) {
+            console.log('components', renderProps.components);
           const app = ReactDOMServer.renderToString(
             React.createElement(Provider, {store},
               React.createElement(RouterContext, renderProps)

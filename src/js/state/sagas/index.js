@@ -21,7 +21,7 @@ function* loginSaga() {
 }
 
 
-function* fetchShowcase() {
+export function* fetchShowcase() {
     try {
         const showcase = yield call(showcaseFetcher);
         const titles = showcase[2].filter((title) => !!title);
