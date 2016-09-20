@@ -32,7 +32,14 @@ export function* fetchShowcase() {
             .map((resource) => {
                 if (resource.video) {
                     return resource.video;
+                } else if (resource.object) {
+                    return Object.assign({}, resource.object,
+                        {title: resource.object.name, thumbnail_url: resource.picture}
+                    );
                 } else {
+                    if (resource.picture && !resource.thumbnail_url){
+                        resource.thumbnail_url = resource.picture;
+                    }
                     return resource;
                 }
             });

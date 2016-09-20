@@ -8,7 +8,6 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
 import { Provider } from 'react-redux';
-import ClientApp from '../src/js/app';
 import clientRoutes from '../src/js/routes';
 import configureStore from '../src/js/state/store';
 import waitAll from '../src/js/state/sagas/waitAll';
@@ -35,6 +34,9 @@ app.use(function(req, res, next) {
 app.use('/api', router);
 
 app.get('*', (req, res) => {
+    // FOR LOGGING PURPOSES
+    const startResponseTimestamp = Date.now();
+
     let store = configureStore(); // creating a new store every new request
     store.dispatch({
         type: 'GREET',
@@ -53,11 +55,18 @@ app.get('*', (req, res) => {
                 .reduce((result, preloaders) => result.concat(preloaders), []);
 
             store.runSaga(waitAll(preloaders)).done.then(() => {
+                const endApiQueryTimestamp = Date.now();
+                console.log(`receiving data from Rutube api took ${endApiQueryTimestamp - startResponseTimestamp} ms`);
                 const app = ReactDOMServer.renderToString(
                     React.createElement(Provider, {store},
                         React.createElement(RouterContext, renderProps)
                     )
                 );
+
+                // FOR LOGGING PURPOSES
+                const endResponseTimestamp = Date.now();
+                console.log(`server-side rendering took ${endResponseTimestamp - endApiQueryTimestamp} ms; total response time: ${endResponseTimestamp - startResponseTimestamp} ms`);
+
                 res.render('index.ejs', {app, store: store.getState()});
 
             });

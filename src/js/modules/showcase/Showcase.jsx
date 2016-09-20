@@ -27,7 +27,6 @@ export class Showcase extends Component {
     }
 
     render() {
-        console.log('this.props.showcase.cards', this.props.showcase.cards);
         const cards = this.props.showcase.cards.map((card, index) => (
             <article key={index} style={styles.card.card}>
                 <div className='item-preview' style={styles.card.imageContainer}>
