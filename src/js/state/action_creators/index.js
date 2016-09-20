@@ -14,8 +14,8 @@ export function login(payload) {
     };
 }
 
-export function getTitles() {
+export function getShowcase() {
     return {
-        type: types.GET_SHOWCASE_TITLES
+        type: types.GET_SHOWCASE
     };
 }

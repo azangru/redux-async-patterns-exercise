@@ -52,9 +52,7 @@ app.get('*', (req, res) => {
                 .map((component) => component.preload)
                 .reduce((result, preloaders) => result.concat(preloaders), []);
 
-
             store.runSaga(waitAll(preloaders)).done.then(() => {
-                console.log('store', store.getState());
                 const app = ReactDOMServer.renderToString(
                     React.createElement(Provider, {store},
                         React.createElement(RouterContext, renderProps)

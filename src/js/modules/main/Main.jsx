@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router';
+import Showcase from '~/modules/showcase/Showcase';
+import {fetchShowcase as fetchShowcaseSaga} from '~/state/sagas';
 
-export class Uploader extends Component {
+
+export class Main extends Component {
 
     constructor(props) {
         super(props);
@@ -13,11 +16,12 @@ export class Uploader extends Component {
                 This is the main page <br />
             <Link to={'/hashtag-autocompletion-with-draftjs'}>Check out the page with hashtag autocompletion</Link> <br/>
             <Link to={'/login'}>Log in</Link> <br/>
-            <Link to={'/showcase'}>Main showcase titles</Link>
+            <Showcase />
             </div>
         );
     }
 }
 
+Main.preload = [fetchShowcaseSaga];
 
-export default Uploader;
+export default Main;
