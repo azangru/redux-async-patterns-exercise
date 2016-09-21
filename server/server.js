@@ -1,9 +1,9 @@
 import express from 'express';
 import path from 'path';
-import morgan from 'morgan';
 import bodyParser from 'body-parser';
 
 // for logging purposes
+import morgan from 'morgan';
 import util from 'util';
 
 // for react server-side rendering
@@ -18,8 +18,8 @@ import waitAll from '../src/js/state/sagas/waitAll';
 import router from './routes';
 
 let app = express();
+app.use(morgan('dev')); // logging
 
-app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
@@ -62,7 +62,7 @@ app.get('*', (req, res) => {
 
             store.runSaga(waitAll(preloaders)).done.then(() => {
                 const endApiQueryTimestamp = Date.now();
-                console.log(`receiving data from Rutube api took ${endApiQueryTimestamp - startResponseTimestamp} ms`);
+                
                 const app = ReactDOMServer.renderToString(
                     React.createElement(Provider, {store},
                         React.createElement(RouterContext, renderProps)
@@ -71,12 +71,10 @@ app.get('*', (req, res) => {
 
                 // FOR LOGGING PURPOSES
                 const endResponseTimestamp = Date.now();
-                console.log(`server-side rendering took ${endResponseTimestamp - endApiQueryTimestamp} ms; total response time: ${endResponseTimestamp - startResponseTimestamp} ms`);
-                console.log(`memory consumption: ${util.inspect(process.memoryUsage())}`);
-                console.log(`total number of requests served: ${requestNumber}`);
+
+                util.log(`request no. ${requestNumber}; time to response from api: ${endApiQueryTimestamp - startResponseTimestamp} ms; time for rendering: ${endResponseTimestamp - endApiQueryTimestamp} ms; total response time: ${endResponseTimestamp - startResponseTimestamp} ms; memory consumption: ${util.inspect(process.memoryUsage())}`);
 
                 res.render('index.ejs', {app, store: store.getState()});
-
             });
         } else {
           res.status(404).send('not found lol');
