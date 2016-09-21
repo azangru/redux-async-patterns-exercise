@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const {resolve} = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
 
@@ -79,16 +79,16 @@ module.exports = (env) => {
         }),
 
         // создаем html-шаблон с путями к css-файлам
-        new HtmlWebpackPlugin({
-            // filename — название выходного файла относительно output: path
-            filename: 'index.html',
-            inject: true,
-            minify: {
-                collapseWhitespace: true
-            },
-            // template — путь к шаблону относительно webpack config: context
-            template: '../index.html'
-        }),
+        // new HtmlWebpackPlugin({
+        //     // filename — название выходного файла относительно output: path
+        //     filename: 'index.html',
+        //     inject: true,
+        //     minify: {
+        //         collapseWhitespace: true
+        //     },
+        //     // template — путь к шаблону относительно webpack config: context
+        //     template: '../index.html'
+        // }),
     ];
     let prodPlugins = [
         new webpack.DefinePlugin({
