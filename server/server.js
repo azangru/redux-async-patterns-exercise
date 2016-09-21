@@ -3,6 +3,9 @@ import path from 'path';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 
+// for logging purposes
+import util from 'util';
+
 // for react server-side rendering
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
@@ -11,7 +14,6 @@ import { Provider } from 'react-redux';
 import clientRoutes from '../src/js/routes';
 import configureStore from '../src/js/state/store';
 import waitAll from '../src/js/state/sagas/waitAll';
-
 
 import router from './routes';
 
@@ -33,9 +35,13 @@ app.use(function(req, res, next) {
 
 app.use('/api', router);
 
+// FOR LOGGING PURPOSES
+let requestNumber = 0;
+
 app.get('*', (req, res) => {
     // FOR LOGGING PURPOSES
     const startResponseTimestamp = Date.now();
+    requestNumber += 1;
 
     let store = configureStore(); // creating a new store every new request
     store.dispatch({
@@ -66,6 +72,8 @@ app.get('*', (req, res) => {
                 // FOR LOGGING PURPOSES
                 const endResponseTimestamp = Date.now();
                 console.log(`server-side rendering took ${endResponseTimestamp - endApiQueryTimestamp} ms; total response time: ${endResponseTimestamp - startResponseTimestamp} ms`);
+                console.log(`memory consumption: ${util.inspect(process.memoryUsage())}`);
+                console.log(`total number of requests served: ${requestNumber}`);
 
                 res.render('index.ejs', {app, store: store.getState()});
 

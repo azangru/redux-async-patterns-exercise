@@ -11,7 +11,8 @@
     "prebuild": "npm run clean",
     "build": "webpack --env.prod",
     "test": "mocha src/tests/.setup.js --reporter spec src/**/*.spec.js",
-    "backend": "NODE_ENV=production nodemon server/index.js"
+    "backend-dev": "NODE_ENV=production nodemon server/index.js",
+    "backend": "NODE_ENV=production forever server/index.js"
   },
   "author": "Rutube Development Team",
   "license": "UNLICENSED",
@@ -20,6 +21,7 @@
     "draft-js": "^0.8.0",
     "ejs": "^2.5.2",
     "express": "^4.14.0",
+    "forever": "^0.15.2",
     "isomorphic-fetch": "^2.2.1",
     "jsonwebtoken": "^7.1.9",
     "morgan": "^1.7.0",
