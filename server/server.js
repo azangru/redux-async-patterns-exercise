@@ -35,13 +35,9 @@ app.use(function(req, res, next) {
 
 app.use('/api', router);
 
-// FOR LOGGING PURPOSES
-let requestNumber = 0;
-
 app.get('*', (req, res) => {
     // FOR LOGGING PURPOSES
     const startResponseTimestamp = Date.now();
-    requestNumber += 1;
 
     let store = configureStore(); // creating a new store every new request
     store.dispatch({
@@ -72,7 +68,7 @@ app.get('*', (req, res) => {
                 // FOR LOGGING PURPOSES
                 const endResponseTimestamp = Date.now();
 
-                util.log(`request no. ${requestNumber}; time to response from api: ${endApiQueryTimestamp - startResponseTimestamp} ms; time for rendering: ${endResponseTimestamp - endApiQueryTimestamp} ms; total response time: ${endResponseTimestamp - startResponseTimestamp} ms; memory consumption: ${util.inspect(process.memoryUsage())}`);
+                util.log(`time to response from api: ${endApiQueryTimestamp - startResponseTimestamp} ms; time for rendering: ${endResponseTimestamp - endApiQueryTimestamp} ms; total response time: ${endResponseTimestamp - startResponseTimestamp} ms; memory consumption: ${util.inspect(process.memoryUsage())}`);
 
                 res.render('index.ejs', {app, store: store.getState()});
             });
