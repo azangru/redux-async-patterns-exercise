@@ -20,21 +20,21 @@ export class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
+            email: '',
             password: ''
         };
         this.bindFunctions();
     }
 
     bindFunctions() {
-        this.changeUsername = this.changeUsername.bind(this);
+        this.changeEmail = this.changeEmail.bind(this);
         this.changePassword = this.changePassword.bind(this);
         this.handleClick = this.handleClick.bind(this);
     }
 
-    changeUsername(e) {
+    changeEmail(e) {
         this.setState({
-            username: e.target.value
+            email: e.target.value
         });
     }
 
@@ -46,7 +46,7 @@ export class Login extends Component {
 
     handleClick() {
         this.props.loginActions.login({
-            username: this.state.username,
+            email: this.state.email,
             password: this.state.password
         });
     }
@@ -58,10 +58,10 @@ export class Login extends Component {
                 <label>
                     <input
                       type="text"
-                      value={this.state.username}
-                      onChange={this.changeUsername}
+                      value={this.state.email}
+                      onChange={this.changeEmail}
                     />
-                    username
+                    email
                 </label>
                 <label>
                     <input
