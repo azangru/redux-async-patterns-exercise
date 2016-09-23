@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 // for logging purposes
 import morgan from 'morgan';
 import util from 'util';
+import averageCpuUsage from './utils/cpu-usage';
 
 // for react server-side rendering
 import React from 'react';
@@ -68,7 +69,9 @@ app.get('*', (req, res) => {
                 // FOR LOGGING PURPOSES
                 const endResponseTimestamp = Date.now();
 
-                util.log(`time to response from api: ${endApiQueryTimestamp - startResponseTimestamp} ms; time for rendering: ${endResponseTimestamp - endApiQueryTimestamp} ms; total response time: ${endResponseTimestamp - startResponseTimestamp} ms; memory consumption: ${util.inspect(process.memoryUsage())}`);
+                averageCpuUsage().then((percentCpuUsage) => {
+                    util.log(`time to response from api: ${endApiQueryTimestamp - startResponseTimestamp} ms; time for rendering: ${endResponseTimestamp - endApiQueryTimestamp} ms; total response time: ${endResponseTimestamp - startResponseTimestamp} ms; memory consumption: ${util.inspect(process.memoryUsage())}; CPU usage: ${percentCpuUsage}%`);
+                });
 
                 res.render('index.ejs', {app, store: store.getState()});
             });
