@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 
 // for logging purposes
 import morgan from 'morgan';
+import winston from 'winston';
 import util from 'util';
 import averageCpuUsage from './utils/cpu-usage';
 
@@ -19,7 +20,18 @@ import waitAll from '../client/js/state/sagas/waitAll';
 import router from './routes';
 
 let app = express();
-app.use(morgan('dev')); // logging
+
+// Logging Middleware
+app.use(morgan('dev'));
+let winstonLogger = new winston.Logger({
+    transports: [
+        new (winston.transports.Console)(),
+        new (winston.transports.File)({ filename: path.join(__dirname, '../../logs/errors.log')})
+    ]
+  });
+process.on('uncaughtException', (err) => {
+    winstonLogger.error(`UNHANDLED EXCEPTION! ${err}`);
+});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -74,6 +86,9 @@ app.get('*', (req, res) => {
                 });
 
                 res.render('index.ejs', {app, store: store.getState()});
+            }).catch((e) => {
+                winstonLogger.error(`ERROR DURING REQUEST HANDLING! — ${e}`);
+                return res.status(500).send(e.message);
             });
         } else {
           res.status(404).send('not found lol');
@@ -81,8 +96,6 @@ app.get('*', (req, res) => {
     });
 
 });
-
-
 
 app.set('port', process.env.PORT || 3000);
 
