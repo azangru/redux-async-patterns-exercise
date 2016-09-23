@@ -12,9 +12,9 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
 import { Provider } from 'react-redux';
-import clientRoutes from '../src/js/routes';
-import configureStore from '../src/js/state/store';
-import waitAll from '../src/js/state/sagas/waitAll';
+import clientRoutes from '../client/js/routes';
+import configureStore from '../client/js/state/store';
+import waitAll from '../client/js/state/sagas/waitAll';
 
 import router from './routes';
 
@@ -24,7 +24,7 @@ app.use(morgan('dev')); // logging
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../../public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 

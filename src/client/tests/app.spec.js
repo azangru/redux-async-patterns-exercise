@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import { App } from '~/app.jsx';
+import { Layout } from '~/layout.jsx';
 
-describe('<App />', () => {
+describe('<Layout />', () => {
 
     let minimalProps;
 
@@ -19,7 +19,7 @@ describe('<App />', () => {
     });
 
     it('renders', () => {
-        let shallowRenderedComponent = shallow(<App {...minimalProps} />);
+        let shallowRenderedComponent = shallow(<Layout {...minimalProps} />);
         expect(shallowRenderedComponent.length).to.equal(1);
     });
 

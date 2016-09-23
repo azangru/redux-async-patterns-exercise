@@ -3,6 +3,10 @@
 
 require('babel-register')();
 
+// to prevent the ReferenceError: regeneratorRuntime is not defined
+// (that occurs because of the generator use with Babel)
+require('babel-polyfill');
+
 var jsdom = require('jsdom').jsdom;
 
 var exposedProperties = ['window', 'navigator', 'document'];

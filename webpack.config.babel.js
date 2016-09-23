@@ -11,7 +11,7 @@ module.exports = (env) => {
     // ОСНОВНЫЕ НАСТРОЙКИ
     const config = {
         debug: false,
-        context: resolve('src/js'),
+        context: resolve('src/client/js'),
         entry: {
             javascript: ['babel-polyfill', './index.js'],
             vendor: ['react', 'react-dom', 'react-router', 'redux', 'react-redux']
@@ -34,7 +34,7 @@ module.exports = (env) => {
                         presets: [['es2015', {'modules': false}], 'stage-2', 'react'],
                         plugins: [
                             ['babel-root-import', {
-                                rootPathSuffix: 'src/js'
+                                rootPathSuffix: 'src/client/js'
                             }]
                         ]
                     }
