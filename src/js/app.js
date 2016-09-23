@@ -1,5 +1,3 @@
-// import '../styles/styles.scss'; // eslint-disable-line import/no-unresolved
-
 import React from 'react';
 import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';

@@ -8,5 +8,17 @@
         ["babel-root-import", {
             "rootPathSuffix": "src/js"
         }]
-    ]
+    ],
+    "env": {
+        "node": {
+            "plugins": [
+                [
+                    "babel-plugin-transform-require-ignore",
+                    {
+                        "extensions": [".scss", ".css"]
+                    }
+                ]
+            ]
+        }
+    }
 }
