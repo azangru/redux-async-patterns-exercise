@@ -66,7 +66,7 @@ app.get('*', (req, res) => {
         } else if (renderProps) {
             const preloaders = renderProps.components
                 .filter((component) => component && component.preload)
-                .map((component) => component.preload)
+                .map((component) => component.preload(renderProps.params, req))
                 .reduce((result, preloaders) => result.concat(preloaders), []);
 
             store.runSaga(waitAll(preloaders)).done.then(() => {

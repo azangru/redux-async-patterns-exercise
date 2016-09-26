@@ -82,7 +82,9 @@ const styles = {
 };
 
 
-Showcase.preload = [fetchShowcaseSaga];
+Showcase.preload = () => [
+    [fetchShowcaseSaga]
+];
 
 export default connect(
   mapStateToProps,
