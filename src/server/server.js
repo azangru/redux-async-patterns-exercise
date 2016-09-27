@@ -80,6 +80,7 @@ if (cluster.isMaster) {
         const startResponseTimestamp = Date.now();
 
         let store = configureStore(); // creating a new store every new request
+        // example of filling the store with synchronously obtained data
         store.dispatch({
             type: 'GREET',
             payload: {message: "Hello world!"}
@@ -96,6 +97,8 @@ if (cluster.isMaster) {
                     .map((component) => component.preload(renderProps.params, req))
                     .reduce((result, preloaders) => result.concat(preloaders), []);
 
+                // filling the store with asynchronous data
+                // necessary for components rendering
                 store.runSaga(waitAll(preloaders)).done.then(() => {
                     const endApiQueryTimestamp = Date.now();
 

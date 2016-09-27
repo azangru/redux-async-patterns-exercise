@@ -1,27 +1,66 @@
 import Layout from './layout';
-import Main from '~/modules/main/Main';
-import Showcase from '~/modules/showcase/Showcase';
-import Login from '~/modules/login/Login';
-import HashtagAutocompletionPage from '~/modules/hashtag-autocompletion-demo/DemoPage';
+
+// the solution for imitating System.js on the server is taken from this
+// StackOverflow question: http://stackoverflow.com/questions/37121442/server-side-react-with-webpack-2-system-import
+if (typeof System === 'undefined') {
+    // we are on the server side
+    var System = {
+        import(path) {
+            return Promise.resolve(require(path));
+        }
+    };
+}
+
+function errorLoading(err) {
+    console.error('Could not load the route', err);
+}
+
+function loadRoute(module, cb) {
+    cb(null, module.default);
+}
 
 export default {
     component: Layout,
     path: '/',
     indexRoute: {
-        component: Main
+        getComponent(location, cb) {
+            return System.import('./modules/main/Main.jsx')
+                .then((component) => {
+                    loadRoute(component, cb);
+                })
+                .catch(errorLoading);
+        }
     },
     childRoutes: [
         {
             path: 'showcase',
-            component: Showcase
+            getComponent(location, cb) {
+                return System.import('./modules/showcase/Showcase.jsx')
+                    .then((component) => {
+                        loadRoute(component, cb);
+                    })
+                    .catch(errorLoading);
+            }
         },
         {
             path: 'login',
-            component: Login
+            getComponent(location, cb) {
+                return System.import('./modules/login/Login.jsx')
+                    .then((component) => {
+                        loadRoute(component, cb);
+                    })
+                    .catch(errorLoading);
+            }
         },
         {
             path: 'hashtag-autocompletion-with-draftjs',
-            component: HashtagAutocompletionPage
+            getComponent(location, cb) {
+                return System.import('./modules/hashtag-autocompletion-demo/DemoPage.jsx')
+                    .then((component) => {
+                        loadRoute(component, cb);
+                    })
+                    .catch(errorLoading);
+            }
         }
     ]
 };
