@@ -16,7 +16,7 @@ export class Main extends Component {
                 This is the main page <br />
             <Link to={'/hashtag-autocompletion-with-draftjs'}>Check out the page with hashtag autocompletion</Link> <br/>
             <Link to={'/login'}>Log in</Link> <br/>
-            <Showcase />
+            <Showcase {...this.props} />
             </div>
         );
     }

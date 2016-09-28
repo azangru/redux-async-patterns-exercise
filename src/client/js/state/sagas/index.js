@@ -5,6 +5,11 @@ import { browserHistory } from 'react-router';
 import * as types from '../constants/ActionTypes';
 import {login} from '~/api/login';
 import {showcaseFetcher, tabFetcher} from '~/api/showcase';
+import {mergeFetchedResourcesInTabs} from '~/state/helpers/showcase-helpers';
+
+// normalizr-related imports
+import { normalize } from 'normalizr';
+import { showcase as schowcaseSchema } from '~/state/schemas/showcase';
 
 function* fetchUser(action) {
     try {
@@ -24,28 +29,15 @@ function* loginSaga() {
 export function* fetchShowcase() {
     try {
         const showcase = yield call(showcaseFetcher);
+        delete showcase.ab_test_code;
         const tabs = showcase.tabs;
         const firstTab = tabs[0];
         const resources = yield call(tabFetcher, firstTab);
-        const cards = resources.map((resource) => resource.results)
-            .reduce((accumulatorArray, currentArray) => accumulatorArray.concat(currentArray))
-            .map((resource) => {
-                if (resource.video) {
-                    return resource.video;
-                } else if (resource.object) {
-                    return Object.assign({}, resource.object,
-                        {title: resource.object.name, thumbnail_url: resource.picture}
-                    );
-                } else {
-                    if (resource.picture && !resource.thumbnail_url){
-                        resource.thumbnail_url = resource.picture;
-                    }
-                    return resource;
-                }
-            });
-        yield put({type: types.SHOWCASE_FETCHED, payload: cards});
+        mergeFetchedResourcesInTabs(firstTab, resources);
+        const normalizedShowcase = normalize(showcase, schowcaseSchema);
+        yield put({type: types.SHOWCASE_FETCHED, payload: normalizedShowcase});
     } catch (e) {
-        yield put({type: "SHOWCASE_FETCH_FAILED", message: e.message});
+        yield put({type: types.SHOWCASE_FETCH_FAILED, message: e.message});
     }
 }
 

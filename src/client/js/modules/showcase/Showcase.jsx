@@ -26,29 +26,57 @@ export class Showcase extends Component {
         this.props.showcaseActions.getShowcase();
     }
 
-    render() {
-        const cards = this.props.showcase.cards.map((card, index) => (
-            <article key={index} style={styles.card.card}>
-                <div className='item-preview' style={styles.card.imageContainer}>
-                    <img src={card.thumbnail_url} style={styles.card.image}></img>
-                </div>
-                <div className='card-info'>
-                    <div className='video-title' style={styles.card.videoTitle}>
-                        {card.title}
-                    </div>
-                    <div className='video-description'>
-                        {card.description}
-                    </div>
+    buildCards() {
+        if (this.props.showcase.entities && this.props.showcase.entities.cards) {
+            return Object.keys(this.props.showcase.entities.cards)
+                .map((key) => this.props.showcase.entities.cards[key])
+                .map((card, index) => {
+                    card = this.standardizeCard(card);
+                    return (
+                        <article key={index} style={styles.card.card}>
+                            <div className='item-preview' style={styles.card.imageContainer}>
+                                <img src={card.thumbnail_url} style={styles.card.image}></img>
+                            </div>
+                            <div className='card-info'>
+                                <div className='video-title' style={styles.card.videoTitle}>
+                                    {card.title}
+                                </div>
+                                <div className='video-description'>
+                                    {card.description}
+                                </div>
 
-                </div>
-            </article>
-        ));
+                            </div>
+                        </article>    
+                    );
+                });
+        } else {
+            return null;
+        }
+    }
+    
+    standardizeCard(card) {
+        if (card.video) {
+            return card.video;
+        } else if (card.object) {
+            return Object.assign({}, card.object,
+                {title: card.object.name, thumbnail_url: card.picture}
+            );
+        } else {
+            if (card.picture && !card.thumbnail_url){
+                card.thumbnail_url = card.picture;
+            }
+            return card;
+        }
+    }
+
+    render() {
+        const cards = this.buildCards();
         return (
             <div>
                 <h1>Here is a list of video cards</h1>
-                <ul>
+                <div>
                     {cards}
-                </ul>
+                </div>
             </div>
         );
     }

@@ -25,7 +25,7 @@ export class Login extends Component {
         };
         this.bindFunctions();
     }
-
+    
     bindFunctions() {
         this.changeEmail = this.changeEmail.bind(this);
         this.changePassword = this.changePassword.bind(this);
