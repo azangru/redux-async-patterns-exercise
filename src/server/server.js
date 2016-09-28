@@ -1,6 +1,3 @@
-import cluster from 'cluster';
-import os from 'os';
-
 // Express-related imports
 import express from 'express';
 import path from 'path';
@@ -8,9 +5,9 @@ import bodyParser from 'body-parser';
 
 // Logging-related imports
 import morgan from 'morgan';
-import winston from 'winston';
 import util from 'util';
 import averageCpuUsage from './utils/cpu-usage';
+import winstonLogger from './utils/winston-logger';
 
 // React-related imports
 import React from 'react';
@@ -24,37 +21,8 @@ import waitAll from '../client/js/state/sagas/waitAll';
 // Server-side router
 import router from './routes';
 
-// Logging utility
-let winstonLogger = new winston.Logger({
-    transports: [
-        new (winston.transports.Console)(),
-        new (winston.transports.File)({ filename: path.join(__dirname, '../../logs/errors.log')})
-    ]
-  });
-process.on('uncaughtException', (err) => {
-    winstonLogger.error(`UNHANDLED EXCEPTION! ${err}`);
-});
-
-
-// CREATE A CLUSTER OF NODE PROCESSES
-if (cluster.isMaster) {
-    os.cpus().forEach(() => {
-        cluster.fork();
-    });
+function appConstructor () {
     
-    cluster.on('listening', function(worker, address) {
-        console.log(`Worker started with PID ${worker.process.pid}; listening on port ${address.port}`);
-    });
-    
-    // Listen for dying workers
-    cluster.on('exit', function (worker) {
-
-        // Replace the dead worker,
-        // we're not sentimental
-        winstonLogger.error(`Worker ${worker.id} died`);
-        cluster.fork();
-    });
-} else {
     var app = express();
 
     // Logging Middleware
@@ -134,5 +102,4 @@ if (cluster.isMaster) {
     });
 }
 
-
-export default app;
+export default appConstructor;
