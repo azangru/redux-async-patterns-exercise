@@ -25,15 +25,19 @@ function* loginSaga() {
     yield* takeEvery(types.LOGIN, fetchUser);
 }
 
-
-export function* fetchShowcase() {
+/**
+* @param {type: String, payload: Object}  — action passed automatically
+*        by takeEvery in showcaseSaga; the payload object contains showcase and tab fields
+*/
+export function* fetchShowcase(action) {
     try {
-        const showcase = yield call(showcaseFetcher);
+        const {showcase: showcaseName, tab: tabName} = action.payload;
+        const showcase = yield call(showcaseFetcher, showcaseName);
         delete showcase.ab_test_code;
         const tabs = showcase.tabs;
-        const firstTab = tabs[0];
-        const resources = yield call(tabFetcher, firstTab);
-        mergeFetchedResourcesInTabs(firstTab, resources);
+        const activeTab = tabs.filter((tab) => tab.slug === tabName)[0] || tabs[0];
+        const resources = yield call(tabFetcher, activeTab);
+        mergeFetchedResourcesInTabs(activeTab, resources);
         const normalizedShowcase = normalize(showcase, schowcaseSchema);
         yield put({type: types.SHOWCASE_FETCHED, payload: normalizedShowcase});
     } catch (e) {

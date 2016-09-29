@@ -33,7 +33,7 @@ export default {
     },
     childRoutes: [
         {
-            path: 'feeds/:showcase/(:tab)',
+            path: 'feeds/:showcase(/:tab)',
             getComponent(location, cb) {
                 return System.import('./modules/showcase/Showcase.jsx')
                     .then((component) => {

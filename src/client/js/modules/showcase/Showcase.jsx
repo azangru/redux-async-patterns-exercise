@@ -23,7 +23,8 @@ export class Showcase extends Component {
     }
 
     componentDidMount() {
-        this.props.showcaseActions.getShowcase();
+        let {showcase, tab} = this.props.params;
+        this.props.showcaseActions.getShowcase({showcase, tab});
     }
 
     buildCards() {
@@ -109,10 +110,17 @@ const styles = {
     }
 };
 
-
-Showcase.preload = () => [
-    [fetchShowcaseSaga]
-];
+/**
+* Preload function gets 2 arguments from server.js:
+* - renderProps.params (which are router params)
+* - request object
+*/
+Showcase.preload = (routeParams) => {
+    return [
+        // [fetchShowcaseSaga, this.props.params]
+        [fetchShowcaseSaga, {payload: routeParams}]
+    ]
+};
 
 export default connect(
   mapStateToProps,

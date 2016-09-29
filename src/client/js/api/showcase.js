@@ -1,8 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import URI from 'urijs';
 
-export const showcaseFetcher = function () {
-    let url = '/api/feeds/index'; // hardcoded, because this is just an example
+export const showcaseFetcher = function (showcaseName = 'index') {
+    let url = `/api/feeds/${showcaseName}`; // hardcoded, because this is just an example
 
     // using absolute url on the server and relative url on the client
     if (typeof window === 'undefined') {

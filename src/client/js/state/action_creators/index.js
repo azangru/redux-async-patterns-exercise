@@ -14,8 +14,9 @@ export function login(payload) {
     };
 }
 
-export function getShowcase() {
+export function getShowcase(params) {
     return {
-        type: types.GET_SHOWCASE
+        type: types.GET_SHOWCASE,
+        payload: params || {}
     };
 }
