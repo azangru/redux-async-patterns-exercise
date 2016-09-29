@@ -1,20 +1,12 @@
 import React, {Component} from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as Actions from '~/state/action_creators';
+
 
 function mapStateToProps(state) {
     return {
-        greeting: state.greetingReducer
+        user: state.userReducer
     };
 }
-
-function mapDispatchToProps(dispatch) {
-    return {
-        greetingActions: bindActionCreators(Actions, dispatch),
-    };
-}
-
 
 export class Layout extends Component {
 
@@ -22,14 +14,18 @@ export class Layout extends Component {
         super(props);
     }
 
-    componentWillMount() {
-        this.props.greetingActions.sayHello();
+    greet() {
+        if (!this.props.user.authenticated) {
+            return 'world';
+        } else {
+            return this.props.user.name;
+        }
     }
 
     render() {
         return (
             <div>
-                {this.props.greeting.message}
+                Hello {this.greet()}!
                 {this.props.children}
             </div>
         );
@@ -38,6 +34,5 @@ export class Layout extends Component {
 
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps, null
 )(Layout);

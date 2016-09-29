@@ -1,7 +1,7 @@
-export const GREET = 'GREET';
 export const LOGIN = 'LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const USER_FETCH_SUCCESS = 'USER_FETCH_SUCCESS';
 export const GET_SHOWCASE = 'GET_SHOWCASE';
 export const SHOWCASE_FETCHED = 'SHOWCASE_FETCHED';
 export const SHOWCASE_FETCH_FAILED = 'SHOWCASE_FETCH_FAILED';

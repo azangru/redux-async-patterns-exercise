@@ -3,7 +3,7 @@ import { call, put } from 'redux-saga/effects';
 
 import { browserHistory } from 'react-router';
 import * as types from '../constants/ActionTypes';
-import {login} from '~/api/login';
+import {login, getUser} from '~/api/user';
 import {showcaseFetcher, tabFetcher} from '~/api/showcase';
 import {mergeFetchedResourcesInTabs} from '~/state/helpers/showcase-helpers';
 
@@ -11,18 +11,29 @@ import {mergeFetchedResourcesInTabs} from '~/state/helpers/showcase-helpers';
 import { normalize } from 'normalizr';
 import { showcase as schowcaseSchema } from '~/state/schemas/showcase';
 
-function* fetchUser(action) {
+function* loginUser(action) {
     try {
-        const user = yield call(login, action.payload);
-        browserHistory.push('/');
-        yield put({type: types.LOGIN_SUCCESS, payload: user});
+        const loginResult = yield call(login, action.payload);
+        if (loginResult.success) {
+            yield call(fetchUser);
+            browserHistory.push('/');
+        }
+    } catch (e) {
+        yield put({type: "LOGIN_FAILED", message: e.message});
+    }
+}
+
+function* fetchUser() {
+    try {
+        const user = yield call(getUser);
+        yield put({type: types.USER_FETCH_SUCCESS, payload: user});
     } catch (e) {
         yield put({type: "LOGIN_FAILED", message: e.message});
     }
 }
 
 function* loginSaga() {
-    yield* takeEvery(types.LOGIN, fetchUser);
+    yield* takeEvery(types.LOGIN, loginUser);
 }
 
 /**

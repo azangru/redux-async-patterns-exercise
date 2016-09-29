@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router';
 import Showcase from '~/modules/showcase/Showcase';
-import {fetchShowcase as fetchShowcaseSaga} from '~/state/sagas';
-
 
 export class Main extends Component {
 

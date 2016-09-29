@@ -51,10 +51,6 @@ function appConstructor () {
         const startResponseTimestamp = Date.now();
 
         let store = configureStore(); // creating a new store every new request
-        store.dispatch({
-            type: 'GREET',
-            payload: {message: "Hello world!"}
-        });
 
         match({ routes: clientRoutes, location: req.url }, (error, redirectLocation, renderProps) => {
             if (error) {
