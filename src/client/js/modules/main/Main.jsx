@@ -22,8 +22,6 @@ export class Main extends Component {
     }
 }
 
-Main.preload = () => [
-    [fetchShowcaseSaga]
-];
+Main.preload = Showcase.preload;
 
 export default Main;

@@ -113,13 +113,12 @@ const styles = {
 /**
 * Preload function gets 2 arguments from server.js:
 * - renderProps.params (which are router params)
-* - request object
+* - request object from Express.js
 */
-Showcase.preload = (routeParams) => {
+Showcase.preload = (routeParams, request) => {
     return [
-        // [fetchShowcaseSaga, this.props.params]
         [fetchShowcaseSaga, {payload: routeParams}]
-    ]
+    ];
 };
 
 export default connect(
