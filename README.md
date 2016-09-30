@@ -37,3 +37,21 @@
 2. Запустить приложение командой
 
 `npm run backend`
+
+==========================
+For local development:
+
+nginx settings:
+
+```
+server {
+    listen 8080;
+    location / {
+      proxy_pass <path_to_node_server>;
+    }
+    location /api/ {
+      proxy_pass <path_to_django_server>;
+    }
+}
+
+```
