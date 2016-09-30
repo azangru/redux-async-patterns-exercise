@@ -23,9 +23,12 @@ function* loginUser(action) {
     }
 }
 
-function* fetchUser() {
+/**
+* @param cookies — optional; is provided during server-side rendering
+*/
+export function* fetchUser(cookies) {
     try {
-        const user = yield call(getUser);
+        const user = yield call(getUser, cookies);
         yield put({type: types.USER_FETCH_SUCCESS, payload: user});
     } catch (e) {
         yield put({type: "LOGIN_FAILED", message: e.message});

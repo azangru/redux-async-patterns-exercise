@@ -40,6 +40,10 @@ module.exports = (env) => {
                     }
                 },
                 {
+                    test: /\.json$/,
+                    loader: 'json-loader'
+                },
+                {
                     test: /\.scss$/,
                     loader: ExtractTextPlugin.extract({
                         fallbackLoader: 'style-loader',
