@@ -3,7 +3,7 @@ import { call, put } from 'redux-saga/effects';
 
 import { browserHistory } from 'react-router';
 import * as types from '../constants/ActionTypes';
-import {login, getUser} from '~/api/user';
+import {login, getUser, logout} from '~/api/user';
 import {showcaseFetcher, tabFetcher} from '~/api/showcase';
 import {mergeFetchedResourcesInTabs} from '~/state/helpers/showcase-helpers';
 
@@ -29,14 +29,31 @@ function* loginUser(action) {
 export function* fetchUser(cookies) {
     try {
         const user = yield call(getUser, cookies);
-        yield put({type: types.USER_FETCH_SUCCESS, payload: user});
+        if (user) {
+            yield put({type: types.USER_FETCH_SUCCESS, payload: user});
+        }
     } catch (e) {
         yield put({type: "LOGIN_FAILED", message: e.message});
     }
 }
 
+function* logoutUser() {
+    try {
+        const hasLoggedOut = yield call(logout);
+        if (hasLoggedOut) {
+            yield put({type: types.LOGOUT_SUCCESS});
+        }
+    } catch (e) {
+        yield put({type: "LOGOUT_FAILED", message: e.message});
+    }
+}
+
 function* loginSaga() {
     yield* takeEvery(types.LOGIN, loginUser);
+}
+
+function* logoutSaga() {
+    yield* takeEvery(types.LOGOUT, logoutUser);
 }
 
 /**
@@ -68,6 +85,7 @@ function* showcaseSaga() {
 export default function* rootSaga() {
     yield [
         loginSaga(),
-        showcaseSaga()
+        showcaseSaga(),
+        logoutSaga()
     ];
 }

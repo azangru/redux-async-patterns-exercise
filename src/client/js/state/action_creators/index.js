@@ -7,6 +7,12 @@ export function login(payload) {
     };
 }
 
+export function logout() {
+    return {
+        type: types.LOGOUT
+    };
+}
+
 export function getShowcase(params) {
     return {
         type: types.GET_SHOWCASE,

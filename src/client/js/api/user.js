@@ -19,6 +19,23 @@ export const login = function (credentials) {
         });
 };
 
+export const logout = function () {
+    return fetch('/api/accounts/logout/', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(function(response) {
+            if (response.status >= 400) {
+                throw new Error("Bad response from server");
+            }
+            return true;
+        });
+};
+
 /**
 * @param cookies — optional; is provided during server-side rendering
 */
@@ -48,6 +65,9 @@ export const getUser = function (cookies) {
         .then(function(response) {
             if (response.status >= 400) {
                 throw new Error("Bad response from server");
+            } else if (response.status === 204) {
+                // user is not authenticated
+                return false;
             }
             return response.json().then((user) => {
                 return user;
