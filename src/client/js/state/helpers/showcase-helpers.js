@@ -3,3 +3,9 @@ export const mergeFetchedResourcesInTabs = function (tab, fetchedResources) {
         resource = Object.assign(resource, fetchedResources[index]);
     });
 };
+
+
+export const addMetadataToNormalizedShowcase = (normalizedShowcase, showcase, activeTab) => {
+    normalizedShowcase.activeShowcaseId = showcase.id;
+    normalizedShowcase.activeTabId = activeTab.id;
+};
