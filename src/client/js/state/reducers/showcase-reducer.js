@@ -1,5 +1,11 @@
 import * as types from '../constants/ActionTypes';
 
+// normalizr-related imports
+import { normalize } from 'normalizr';
+import { resource as resourceSchema } from '~/state/schemas/showcase';
+
+
+
 const initialShowcase = {
 };
 
@@ -8,6 +14,8 @@ export default function showcaseReducer (state=initialShowcase, action) {
     switch (action.type) {
         case types.SHOWCASE_FETCHED:
             return mergeNewShowcase (state, action.payload);
+        case types.LOAD_CARDS_FOR_RESOURCES_SUCCESS:
+            return updateResources(state, action.payload);
         default:
             return state;
     }
@@ -38,4 +46,26 @@ const mergeNewShowcase = (state, fetchedShowcase) => {
         Object.assign(newState.entities.tabs, fetchedShowcase.entities.tabs);
         return newState;
     }
+};
+
+const updateResources = (state, fetchedResources) => {
+    const newState = Object.assign({}, state);
+    fetchedResources.forEach((resource) => {
+        const normalizedResource = normalize(resource, resourceSchema);
+        const savedResource = newState.entities.resources[resource.id];
+        
+        // add new cards’ ids to the array of card ids in the corresponding resource
+        
+        savedResource.results = savedResource.results
+            .concat(
+                normalizedResource.entities.resources[resource.id].results
+            );
+        savedResource.has_next = resource.has_next;
+        savedResource.next = resource.next;
+        savedResource.previous = resource.previous;
+        savedResource.page = resource.page;
+        
+        newState.entities.cards = Object.assign({}, newState.entities.cards, normalizedResource.entities.cards);
+    });
+    return newState;
 };

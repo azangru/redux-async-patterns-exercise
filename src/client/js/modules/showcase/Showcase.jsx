@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '~/state/action_creators';
-import {fetchShowcase as fetchShowcaseSaga} from '~/state/sagas';
+import {fetchShowcase as fetchShowcaseSaga} from '~/state/sagas/showcaseSagas';
 import InlineWidget from '~/components/showcase_components/InlineWidget';
 import RegularCardsContainer from '~/components/showcase_components/RegularCardsContainer';
 

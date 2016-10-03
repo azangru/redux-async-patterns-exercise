@@ -15,6 +15,7 @@ export class InlineWidget extends Component {
     // props will include an array of cards
     constructor(props) {
         super(props);
+        this.loadMore = this.loadMore.bind(this);
     }
 
     buildCards() {
@@ -53,6 +54,16 @@ export class InlineWidget extends Component {
             return card;
         }
     }
+    
+    loadMore() {
+        if (this.props.widgetData.has_next) {
+            const payload = {
+                id: this.props.widgetData.id,
+                url: this.props.widgetData.next
+            };
+            this.props.showcaseActions.loadCardsForResources([payload]);
+        }
+    }
 
     render() {
         const cards = this.buildCards();
@@ -66,6 +77,7 @@ export class InlineWidget extends Component {
                         {cards}
                     </div>
                     <div>Left</div>
+                    <button onClick={this.loadMore}>Load More</button>
                 </div>
             );
         }

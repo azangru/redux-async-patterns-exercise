@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
-import {fetchUser as fetchUserSaga} from '~/state/sagas';
+import {fetchUser as fetchUserSaga} from '~/state/sagas/userSagas';
 
 import Header from '~/components/header/Header';
 

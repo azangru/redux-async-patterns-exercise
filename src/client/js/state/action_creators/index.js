@@ -19,3 +19,10 @@ export function getShowcase(params) {
         payload: params || {}
     };
 }
+
+export function loadCardsForResources(resourcesData) {
+    return {
+        type: types.LOAD_CARDS_FOR_RESOURCES,
+        payload: resourcesData
+    };
+}

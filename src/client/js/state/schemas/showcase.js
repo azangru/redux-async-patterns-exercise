@@ -7,7 +7,7 @@ import { Schema, arrayOf } from 'normalizr';
 
 export const showcase = new Schema('showcases');
 const tab = new Schema('tabs');
-const resource = new Schema('resources');
+export const resource = new Schema('resources');
 const card = new Schema('cards');
 
 showcase.define({
