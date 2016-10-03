@@ -1,0 +1,9 @@
+.header-uploader-button {
+    width: 30px;
+    height: 30px;
+    
+    &:hover {
+        fill: #03a9f4;
+        cursor: pointer;
+    }
+}

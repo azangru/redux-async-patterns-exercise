@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import * as Actions from '~/state/action_creators';
+
+import UploadButton from './UploadButton';
 
 
 function mapStateToProps(state) {
@@ -37,11 +39,16 @@ export class Header extends Component {
         }
     }
 
+    redirectToUploader(e) {
+        e.preventDefault();
+        browserHistory.push('/uploader');
+    }
+
     render() {
         return (
             <div>
                 <span>HEADER</span>
-                <span>UPLOAD</span>
+                <UploadButton redirectToUploader={this.redirectToUploader} />
                 {this.loginOrLogoutLink()} <br/>
             </div>
         );

@@ -53,9 +53,9 @@ export default {
             }
         },
         {
-            path: 'hashtag-autocompletion-with-draftjs',
+            path: 'uploader',
             getComponent(location, cb) {
-                return System.import('./modules/hashtag-autocompletion-demo/DemoPage.jsx')
+                return System.import('./modules/uploader/Uploader.jsx')
                     .then((component) => {
                         loadRoute(component, cb);
                     })
