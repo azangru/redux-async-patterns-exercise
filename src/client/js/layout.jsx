@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {fetchUser as fetchUserSaga} from '~/state/sagas';
 
+import Header from '~/components/header/Header';
+
 
 function mapStateToProps(state) {
     return {
@@ -26,7 +28,7 @@ export class Layout extends Component {
     render() {
         return (
             <div>
-                Hello {this.greet()}!
+                <Header />
                 {this.props.children}
             </div>
         );

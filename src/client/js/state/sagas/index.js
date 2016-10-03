@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 import * as types from '../constants/ActionTypes';
 import {login, getUser, logout} from '~/api/user';
 import {showcaseFetcher, tabFetcher} from '~/api/showcase';
-import {mergeFetchedResourcesInTabs} from '~/state/helpers/showcase-helpers';
+import {mergeFetchedResourcesInTabs, addMetadataToNormalizedShowcase} from '~/state/helpers/showcase-helpers';
 
 // normalizr-related imports
 import { normalize } from 'normalizr';
@@ -70,6 +70,7 @@ export function* fetchShowcase(action) {
         const resources = yield call(tabFetcher, activeTab);
         mergeFetchedResourcesInTabs(activeTab, resources);
         const normalizedShowcase = normalize(showcase, schowcaseSchema);
+        addMetadataToNormalizedShowcase(normalizedShowcase, showcase, activeTab);
         yield put({type: types.SHOWCASE_FETCHED, payload: normalizedShowcase});
     } catch (e) {
         yield put({type: types.SHOWCASE_FETCH_FAILED, message: e.message});
