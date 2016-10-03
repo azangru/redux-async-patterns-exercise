@@ -5,6 +5,9 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import proxy from 'express-http-proxy';
 
+// to avoid XSS when passing Redux store from the server to the client
+import serialize from 'serialize-javascript';
+
 // Logging-related imports
 import morgan from 'morgan';
 import util from 'util';
@@ -84,7 +87,7 @@ function appConstructor () {
                         util.log(`time to response from api: ${endApiQueryTimestamp - startResponseTimestamp} ms; time for rendering: ${endResponseTimestamp - endApiQueryTimestamp} ms; total response time: ${endResponseTimestamp - startResponseTimestamp} ms; memory consumption: ${util.inspect(process.memoryUsage())}; CPU usage: ${percentCpuUsage}%`);
                     });
 
-                    res.render('index.ejs', {app, store: store.getState()});
+                    res.render('index.ejs', {app, store: serialize(store.getState())});
                 }).catch((e) => {
                     winstonLogger.error(`ERROR DURING REQUEST HANDLING! — ${e}`);
                     return res.status(500).send(e.message);

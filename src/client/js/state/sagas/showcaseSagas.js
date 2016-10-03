@@ -17,7 +17,6 @@ export function* fetchShowcase(action) {
     try {
         const {showcase: showcaseName, tab: tabName} = action.payload;
         const showcase = yield call(showcaseFetcher, showcaseName);
-        delete showcase.ab_test_code;
         const tabs = showcase.tabs;
         const activeTab = tabs.filter((tab) => tab.slug === tabName)[0] || tabs[0];
         const resources = yield call(tabFetcher, activeTab);
