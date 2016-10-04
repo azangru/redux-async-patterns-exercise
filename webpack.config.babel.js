@@ -14,7 +14,7 @@ module.exports = (env) => {
         context: resolve('src/client/js'),
         entry: {
             javascript: ['babel-polyfill', './index.js'],
-            vendor: ['react', 'react-dom', 'react-router', 'redux', 'react-redux']
+            vendor: ['react', 'react-dom', 'react-router', 'redux', 'react-redux', 'redux-saga']
         },
         output: {
             path: resolve('public'),
