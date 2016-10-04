@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import { takeEvery } from 'redux-saga';
 import { call, put } from 'redux-saga/effects';
 
@@ -23,7 +24,7 @@ function* loginUser(action) {
 export function* fetchUser(cookies) {
     try {
         const user = yield call(getUser, cookies);
-        if (user) {
+        if (!isEmpty(user)) {
             yield put({type: types.USER_FETCH_SUCCESS, payload: user});
         }
     } catch (e) {
