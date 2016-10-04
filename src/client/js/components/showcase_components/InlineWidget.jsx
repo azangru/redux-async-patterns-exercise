@@ -65,8 +65,17 @@ export class InlineWidget extends Component {
         }
     }
 
+    makeLoadMoreButton() {
+        if (this.props.widgetData.has_next) {
+            return <button onClick={this.loadMore}>Load More</button>;
+        } else {
+            return null;
+        }
+    }
+
     render() {
         const cards = this.buildCards();
+        const loadMoreButton = this.makeLoadMoreButton();
         if (!cards.length) {
             return null;
         } else {
@@ -77,7 +86,7 @@ export class InlineWidget extends Component {
                         {cards}
                     </div>
                     <div>Left</div>
-                    <button onClick={this.loadMore}>Load More</button>
+                    {loadMoreButton}
                 </div>
             );
         }
