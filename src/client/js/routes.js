@@ -33,7 +33,7 @@ export default {
     },
     childRoutes: [
         {
-            path: 'showcase',
+            path: 'feeds/:showcase(/:tab)',
             getComponent(location, cb) {
                 return System.import('./modules/showcase/Showcase.jsx')
                     .then((component) => {
@@ -53,9 +53,9 @@ export default {
             }
         },
         {
-            path: 'hashtag-autocompletion-with-draftjs',
+            path: 'uploader',
             getComponent(location, cb) {
-                return System.import('./modules/hashtag-autocompletion-demo/DemoPage.jsx')
+                return System.import('./modules/uploader/Uploader.jsx')
                     .then((component) => {
                         loadRoute(component, cb);
                     })

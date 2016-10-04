@@ -18,7 +18,7 @@ module.exports = (env) => {
         },
         output: {
             path: resolve('public'),
-            publicPath: './',
+            publicPath: '/',
             filename: 'bundle.js'
         },
         module: {
@@ -38,6 +38,10 @@ module.exports = (env) => {
                             }]
                         ]
                     }
+                },
+                {
+                    test: /\.json$/,
+                    loader: 'json-loader'
                 },
                 {
                     test: /\.scss$/,

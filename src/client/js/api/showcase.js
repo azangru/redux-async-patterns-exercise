@@ -1,12 +1,13 @@
 import fetch from 'isomorphic-fetch';
 import URI from 'urijs';
+import config from '~/../../../config.json';
 
-export const showcaseFetcher = function () {
-    let url = '/api/feeds/index'; // hardcoded, because this is just an example
+export const showcaseFetcher = function (showcaseName = 'index') {
+    let url = `/api/feeds/${showcaseName}`; // hardcoded, because this is just an example
 
     // using absolute url on the server and relative url on the client
     if (typeof window === 'undefined') {
-        url = 'https://rutube.ru' + url;
+        url = config.host + url;
     }
 
     return fetch(url, {
@@ -25,13 +26,10 @@ export const showcaseFetcher = function () {
         });
 };
 
-
-export const tabFetcher = function (tab) {
-    const resources = tab.resources || [];
-    // get an array of promises
-    const fetchPromises = resources.map((resource) => {
-        let url = resource.url; // https://rutube.ru/api/blah...
-        const pathname = new URI(url).pathname(); // /api/blah...
+export const resourcesFetcher = function (urls) {
+    const fetchPromises = urls.map((url) => {
+        const uri = new URI(url);
+        const pathname = `${uri.pathname()}${uri.search()}`; // /api/blah...
 
         // using absolute url on the server and relative url on the client
         if (typeof window !== 'undefined') {
@@ -42,7 +40,7 @@ export const tabFetcher = function (tab) {
     return Promise.all(fetchPromises).then((results) => {
         return results;
     }).catch((e) => {
-        console.log(`error while fetching tab resources: ${e}`)
+        console.log(`error while fetching tab resources: ${e}`);
     });
 };
 

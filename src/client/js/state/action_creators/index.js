@@ -1,12 +1,5 @@
 import * as types from '../constants/ActionTypes';
 
-export function sayHello() {
-    return {
-        type: types.GREET,
-        payload: {message: "Hello world!"}
-    };
-}
-
 export function login(payload) {
     return {
         type: types.LOGIN,
@@ -14,8 +7,22 @@ export function login(payload) {
     };
 }
 
-export function getShowcase() {
+export function logout() {
     return {
-        type: types.GET_SHOWCASE
+        type: types.LOGOUT
+    };
+}
+
+export function getShowcase(params) {
+    return {
+        type: types.GET_SHOWCASE,
+        payload: params || {}
+    };
+}
+
+export function loadCardsForResources(resourcesData) {
+    return {
+        type: types.LOAD_CARDS_FOR_RESOURCES,
+        payload: resourcesData
     };
 }

@@ -3,16 +3,16 @@
     <head>
         <meta charset="utf-8">
         <title>Webpack + React</title>
-        <link rel="stylesheet" type="text/css" href="styles.css">
+        <link rel="stylesheet" type="text/css" href="/styles.css">
         <script>
-            var __data = <%-JSON.stringify(store) %>;
+            var __data = <%- store %>;
         </script>
     </head>
     <body>
 
         <main><%- app %></main>
 
-        <script type="text/javascript" src="vendor.js"></script>
-        <script type="text/javascript" src="bundle.js"></script>
+        <script type="text/javascript" src="/vendor.js"></script>
+        <script type="text/javascript" src="/bundle.js"></script>
     </body>
 </html>

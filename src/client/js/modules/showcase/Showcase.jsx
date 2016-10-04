@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '~/state/action_creators';
-import {fetchShowcase as fetchShowcaseSaga} from '~/state/sagas';
+import {fetchShowcase as fetchShowcaseSaga} from '~/state/sagas/showcaseSagas';
+import InlineWidget from '~/components/showcase_components/InlineWidget';
+import RegularCardsContainer from '~/components/showcase_components/RegularCardsContainer';
 
 function mapStateToProps(state) {
     return {
-        showcase: state.showcaseReducer
+        showcases: state.showcaseReducer
     };
 }
 
@@ -23,68 +25,82 @@ export class Showcase extends Component {
     }
 
     componentDidMount() {
-        this.props.showcaseActions.getShowcase();
+        let {showcase, tab} = this.props.params;
+        this.props.showcaseActions.getShowcase({showcase, tab});
+    }
+
+    buildInlineWidgets() {
+        if (!this.props.showcases.entities || !this.props.showcases.entities.resources) {
+            return null;
+        }
+
+        const activeTab = this.props.showcases.entities.tabs[this.props.showcases.activeTabId];
+        const resourceIds = activeTab.resources;
+        const resources = resourceIds.map((id) => this.props.showcases.entities.resources[id]);
+        const inlineWidgets = resources.filter((resource) => resource.inline_widget)
+            .map((widgetData) => (
+                <InlineWidget
+                    key={widgetData.id}
+                    widgetData={widgetData}
+                    cards={this.selectCards(widgetData.results)}
+                />
+            ));
+
+        return inlineWidgets;
+    }
+
+    buildRegularCardsContainer() {
+        if (!this.props.showcases.entities || !this.props.showcases.entities.resources) {
+            return null;
+        }
+
+        const activeTab = this.props.showcases.entities.tabs[this.props.showcases.activeTabId];
+        const resourceIds = activeTab.resources;
+        const resources = resourceIds.map((id) => this.props.showcases.entities.resources[id]);
+        const regularResources = resources.filter((resource) => {
+            return !resource.inline_widget
+                    && resource.content_type.model !== 'iframewidget'
+                    && resource.content_type.model !== 'subscriptionwidget';
+        });
+        const regularResourceCards = regularResources.map((resource) => this.selectCards(resource.results))
+            .reduce((accumulator, currentCardsArray) => (accumulator.concat(currentCardsArray)), []);
+        return <RegularCardsContainer cards={regularResourceCards} />;
+    }
+
+    selectCards(ids) {
+        if (!ids) {
+            return [];
+        }
+        return ids.map((id) => this.props.showcases.entities.cards[id]);
     }
 
     render() {
-        const cards = this.props.showcase.cards.map((card, index) => (
-            <article key={index} style={styles.card.card}>
-                <div className='item-preview' style={styles.card.imageContainer}>
-                    <img src={card.thumbnail_url} style={styles.card.image}></img>
-                </div>
-                <div className='card-info'>
-                    <div className='video-title' style={styles.card.videoTitle}>
-                        {card.title}
-                    </div>
-                    <div className='video-description'>
-                        {card.description}
-                    </div>
-
-                </div>
-            </article>
-        ));
+        const inlineWidgets = this.buildInlineWidgets();
+        this.buildRegularCardsContainer();
+        // const cards = this.buildCards();
         return (
             <div>
                 <h1>Here is a list of video cards</h1>
-                <ul>
-                    {cards}
-                </ul>
+                {inlineWidgets}
+                <div>
+                    Here will be non-widget cards <br />
+                    {this.buildRegularCardsContainer()}
+                </div>
             </div>
         );
     }
 }
 
-const styles = {
-    card: {
-        card: {
-            display: 'inline-block',
-            width: '232px',
-            height: '298px',
-            overflowY: 'hidden',
-            verticalAlign: 'top',
-            margin: '0 20px 20px',
-            borderRadius: '6px'
-        },
-        imageContainer: {
-            width: '232px',
-            height: '131px',
-            borderRadius: '8px 8px 0 0',
-        },
-        image: {
-            width: '100%',
-            height: '100%'
-        },
-        videoTitle: {
-            fontWeight: 'bold',
-            marginBottom: '1em'
-        }
-    }
+/**
+* Preload function gets 2 arguments from server.js:
+* - renderProps.params (which are router params)
+* - request object from Express.js
+*/
+Showcase.preload = (routeParams, request) => {
+    return [
+        [fetchShowcaseSaga, {payload: routeParams}]
+    ];
 };
-
-
-Showcase.preload = () => [
-    [fetchShowcaseSaga]
-];
 
 export default connect(
   mapStateToProps,

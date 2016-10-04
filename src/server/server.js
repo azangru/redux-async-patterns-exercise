@@ -2,6 +2,11 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import proxy from 'express-http-proxy';
+
+// to avoid XSS when passing Redux store from the server to the client
+import serialize from 'serialize-javascript';
 
 // Logging-related imports
 import morgan from 'morgan';
@@ -18,11 +23,10 @@ import clientRoutes from '../client/js/routes';
 import configureStore from '../client/js/state/store';
 import waitAll from '../client/js/state/sagas/waitAll';
 
-// Server-side router
-import router from './routes';
+import config from '~/../../../config.json';
 
 function appConstructor () {
-    
+
     var app = express();
 
     // Logging Middleware
@@ -30,29 +34,31 @@ function appConstructor () {
 
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
+    app.use(cookieParser());
 
     app.use(express.static(path.join(__dirname, '../../public')));
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'ejs');
 
+    // ALLOWS REQUESTS FROM DIFFERENT ORIGIN
     app.use(function(req, res, next) {
       res.header("Access-Control-Allow-Origin", "*");
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
       next();
     });
 
-    app.use('/api', router);
+    // PROXY ALL API REQUESTS TO THE API SERVER
+    app.use('/api', proxy(config.host, {
+        forwardPath: function(req) {
+            return `/api${req.url}`;
+          }
+    }));
 
     app.get('*', (req, res) => {
         // FOR LOGGING PURPOSES
         const startResponseTimestamp = Date.now();
 
         let store = configureStore(); // creating a new store every new request
-        // example of filling the store with synchronously obtained data
-        store.dispatch({
-            type: 'GREET',
-            payload: {message: "Hello world!"}
-        });
 
         match({ routes: clientRoutes, location: req.url }, (error, redirectLocation, renderProps) => {
             if (error) {
@@ -83,7 +89,7 @@ function appConstructor () {
                         util.log(`time to response from api: ${endApiQueryTimestamp - startResponseTimestamp} ms; time for rendering: ${endResponseTimestamp - endApiQueryTimestamp} ms; total response time: ${endResponseTimestamp - startResponseTimestamp} ms; memory consumption: ${util.inspect(process.memoryUsage())}; CPU usage: ${percentCpuUsage}%`);
                     });
 
-                    res.render('index.ejs', {app, store: store.getState()});
+                    res.render('index.ejs', {app, store: serialize(store.getState())});
                 }).catch((e) => {
                     winstonLogger.error(`ERROR DURING REQUEST HANDLING! — ${e}`);
                     return res.status(500).send(e.message);

@@ -9,9 +9,6 @@ describe('<Layout />', () => {
 
     beforeEach(() => {
         minimalProps = {
-            greetingActions: {
-                sayHello: () => {}
-            },
             greeting: {
                 message: ''
             }

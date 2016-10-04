@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router';
-import Showcase from '~/modules/showcase/Showcase';
+import { Link, browserHistory } from 'react-router';
 import * as Actions from '~/state/action_creators';
+
+import UploadButton from './UploadButton';
+
 
 function mapStateToProps(state) {
     return {
@@ -17,7 +19,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export class Main extends Component {
+export class Header extends Component {
 
     constructor(props) {
         super(props);
@@ -37,20 +39,22 @@ export class Main extends Component {
         }
     }
 
+    redirectToUploader(e) {
+        e.preventDefault();
+        browserHistory.push('/uploader');
+    }
+
     render() {
         return (
             <div>
-                This is the main page <br />
-            <Link to={'/hashtag-autocompletion-with-draftjs'}>Check out the page with hashtag autocompletion</Link> <br/>
-            {this.loginOrLogoutLink()} <br/>
-            <Showcase {...this.props} />
+                <span>HEADER</span>
+                <UploadButton redirectToUploader={this.redirectToUploader} />
+                {this.loginOrLogoutLink()} <br/>
             </div>
         );
     }
 }
 
-Main.preload = Showcase.preload;
-
 export default connect(
   mapStateToProps, mapDispatchToProps
-)(Main);
+)(Header);

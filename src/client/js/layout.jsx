@@ -1,20 +1,15 @@
 import React, {Component} from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as Actions from '~/state/action_creators';
+import {fetchUser as fetchUserSaga} from '~/state/sagas/userSagas';
+
+import Header from '~/components/header/Header';
+
 
 function mapStateToProps(state) {
     return {
-        greeting: state.greetingReducer
+        user: state.userReducer
     };
 }
-
-function mapDispatchToProps(dispatch) {
-    return {
-        greetingActions: bindActionCreators(Actions, dispatch),
-    };
-}
-
 
 export class Layout extends Component {
 
@@ -22,22 +17,35 @@ export class Layout extends Component {
         super(props);
     }
 
-    componentWillMount() {
-        this.props.greetingActions.sayHello();
+    greet() {
+        if (!this.props.user.authenticated) {
+            return 'world';
+        } else {
+            return this.props.user.name;
+        }
     }
 
     render() {
         return (
             <div>
-                {this.props.greeting.message}
+                <Header />
                 {this.props.children}
             </div>
         );
     }
 }
 
+/**
+* Preload function gets 2 arguments from server.js:
+* - renderProps.params (which are router params)
+* - request object from Express.js
+*/
+Layout.preload = (routeParams, request) => {
+    return [
+        [fetchUserSaga, request.headers.cookie]
+    ];
+};
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps, null
 )(Layout);
