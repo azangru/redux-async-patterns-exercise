@@ -9,7 +9,7 @@
     "prepare-config": "gulp config:prepare",
     "start": "webpack --env.dev --watch",
     "start-server": "webpack-dev-server --env.dev --inline --history-api-fallback --content-base public",
-    "prebuild": "npm run clean",
+    "prebuild": "npm run clean && npm run prepare-config",
     "build": "webpack --env.prod",
     "test": "mocha src/client/tests/.setup.js --reporter spec src/**/*.spec.js",
     "backend-dev": "nodemon src/server/index.js",
